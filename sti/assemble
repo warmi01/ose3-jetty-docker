@@ -1,0 +1,9 @@
+#!/bin/sh
+
+#Hard coded to take from a specific engine. 
+#Make this image take engine name as a parameter
+touch /var/lib/jetty/webapps/test.txt
+cp -r /tmp/src/* /var/lib/jetty/webapps/
+
+#Future: you can also look for presence of Maven pom file and sources and can build here
+#At that time, AppPackage can have source files and Pom file instead of WAR files for better developer productivity

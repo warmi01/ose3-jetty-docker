@@ -1,0 +1,48 @@
+#!/bin/sh
+
+cat <<EOF
+This is a STI tomcat builder image responsible for consuming a JEE project
+and deploying it onto tomcat server.
+
+This image is built from https://github-isl-01.ca.com/burjo26/appformer-sti-tomcat-builder
+You can use this image in Openshift 3 as the builder image and pass in AppPackage github url
+
+If war or exploded folders are present in <AppPackage Git URL>/engine/helloworld they will be copied
+into the tomcat deployments directory as is.
+
+
+--------------------------------------------------------
+To create an STI image outside of OpenShift3:
+#install GO - you can install on any machine. 
+#For later steps you need docker as well. If you dont have it, install it too. "yum -y install docker"
+yum -y install go
+ 
+#Reference: http://golang.org/doc/code.html
+#Config for GO tool
+# Home can be set your default home dir, it is not already set
+mkdir $HOME/go
+export GOPATH=$HOME/go
+export PATH=$PATH:$GOPATH/bin
+
+
+To use it, install STI: 
+# Get STI tool
+$ go get github.com/openshift/source-to-image
+$ cd ${GOPATH}/src/github.com/openshift/source-to-image
+$ export PATH=$PATH:${GOPATH}/src/github.com/openshift/source-to-image/_output/local/go/bin/
+$ hack/build-go.sh
+ 
+#Now you should have 'sti build' command working.
+#Run STI build outside OpenShift3
+sti build <application git/filesystem> <which builder> <image_Name> --loglevel=5
+Example:
+sti build https://github-isl-01.ca.com/burjo26/HelloWorldAppPackage appformer-sti-tomcat-builder my-helloworld-tomcat-image --loglevel=5
+
+----------------------------------------------------------
+
+Run
+You can then run the resulting image via:
+docker run -d -p 8080:8080 -name="my-helloworld-tomcat-container" my-helloworld-tomcat-image
+curl http://localhost:8080/HelloWorld2/index.jsp
+
+EOF
