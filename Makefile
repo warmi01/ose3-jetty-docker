@@ -1,4 +1,5 @@
-IMAGE_NAME = appformer-sti-jetty-builder
+SKIP_SQUASH?=0
 
+.PHONY: build
 build:
-		docker build -t $(IMAGE_NAME) .
+	SKIP_SQUASH=$(SKIP_SQUASH) VERSIONS=$(VERSIONS) build/build.sh

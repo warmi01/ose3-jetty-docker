@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 
+  Example LOGBACK Configuration File
+  http://logback.qos.ch/manual/configuration.html
+  -->
+<configuration>
+  <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+    <encoder>
+      <pattern>%d [%thread] %-5level %logger{36} - %msg%n</pattern>
+    </encoder>
+  </appender>
+
+  <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+    <file>${jetty.logging.dir}/jetty.log</file>
+    <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+      <fileNamePattern>jetty_%d{yyyy-MM-dd}.log</fileNamePattern>
+      <maxHistory>3</maxHistory>
+    </rollingPolicy>
+    <triggeringPolicy class="ch.qos.logback.core.rolling.SizeBasedTriggeringPolicy">
+       <maxFileSize>20MB</maxFileSize>
+    </triggeringPolicy>
+    <encoder>
+       <pattern>%d{HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n</pattern>
+    </encoder>
+  </appender>
+
+    <appender name="SYSLOG" class="ch.qos.logback.classic.net.SyslogAppender">
+        <!-- send logs directly to OSE Node -->
+        <syslogHost>localhost</syslogHost>
+        <facility>USER</facility>
+        <suffixPattern>PLATFORM_JETTY: {"Namespace" : "${OPENSHIFT_NAMESPACE}", "AppName":  "${OPENSHIFT_APP_NAME}", "AppInstance":  "${APP_INSTANCE_ID}", "EngineName":  "${APP_ENGINE_NAME}", "GearID" :  "${OPENSHIFT_GEAR_UUID}", "TenantID" :  "%X{TENANT_ID}", "UserID" :  "%X{USER_ID}", "TransactionID" :  "%X{TRANSACTION_ID}", "Level" : "%-5level", "Thread" : "%thread", "Logger" : "%logger", "Message" : "%msg", "Stacktrace" : "%ex{short}" }%n</suffixPattern>
+    </appender>
+
+    <logger name="com.ca" level="debug" additivity="false">
+        <appender-ref ref="SYSLOG" />
+        <appender-ref ref="FILE" />
+    </logger>
+    
+  <root level="info">
+    <appender-ref ref="STDOUT" />
+    <appender-ref ref="FILE" />
+  </root>
+</configuration>

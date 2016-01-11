@@ -1,14 +1,14 @@
 #!/bin/sh
 
 cat <<EOF
-This is a STI tomcat builder image responsible for consuming a JEE project
-and deploying it onto tomcat server.
+This is a STI jetty builder image responsible for consuming a JEE project
+and deploying it onto jetty server.
 
-This image is built from https://github-isl-01.ca.com/burjo26/appformer-sti-tomcat-builder
+This image is built from https://github.com/memeinstigator/appformer-sti-jetty-builder
 You can use this image in Openshift 3 as the builder image and pass in AppPackage github url
 
 If war or exploded folders are present in <AppPackage Git URL>/engine/helloworld they will be copied
-into the tomcat deployments directory as is.
+into the jetty deployments directory as is.
 
 
 --------------------------------------------------------
@@ -34,15 +34,13 @@ $ hack/build-go.sh
  
 #Now you should have 'sti build' command working.
 #Run STI build outside OpenShift3
-sti build <application git/filesystem> <which builder> <image_Name> --loglevel=5
-Example:
-sti build https://github-isl-01.ca.com/burjo26/HelloWorldAppPackage appformer-sti-tomcat-builder my-helloworld-tomcat-image --loglevel=5
+sti build https://github.com/memeinstigator/HelloWorldAppPackage appformer-sti-jetty-builder my-helloworld-jetty-image --loglevel=5 --context-dir=engine/helloworld
 
 ----------------------------------------------------------
 
 Run
 You can then run the resulting image via:
-docker run -d -p 8080:8080 -name="my-helloworld-tomcat-container" my-helloworld-tomcat-image
+docker run -d -p 8080:8080 -name="my-helloworld-jetty-container" my-helloworld-jetty-image
 curl http://localhost:8080/HelloWorld2/index.jsp
 
 EOF
